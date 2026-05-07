@@ -4,8 +4,11 @@ namespace SpriteKind {
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(0, -1)
 })
+function userSpin () {
+    The_grid = Rotate(truecursorpos[0], truecursorpos[1])
+    updateBoard()
+}
 function Reset_board () {
-    The_grid = [[randint(1, 7)]]
     gemlist = [
     assets.tile`nothing`,
     assets.tile`blue`,
@@ -28,6 +31,9 @@ function Reset_board () {
     }
     updateBoard()
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    userSpin()
+})
 function changecursorpos (col: number, row: number) {
     truecursorpos = [Math.constrain(truecursorpos[0] + col, 0, 7), Math.constrain(truecursorpos[1] + row, 0, 7)]
     placeCursorOnGrid(truecursorpos[0], truecursorpos[1])
@@ -53,11 +59,25 @@ function updateBoard () {
         }
     }
 }
+function Rotate (col: number, row: number) {
+    cba = [0, 1]
+    cba = [The_grid[row + 1][col]]
+    cba.push(The_grid[row][col])
+    cba.push(The_grid[row][col + 1])
+    cba.push(The_grid[row + 1][col + 1])
+    The_grid[row][col] = cba[0]
+    The_grid[row][col + 1] = cba[1]
+    The_grid[row + 1][col + 1] = cba[2]
+    The_grid[row + 1][col] = cba[3]
+    return The_grid
+}
+let cba: number[] = []
 let gemlist: Image[] = []
-let The_grid: number[][] = []
 let truecursorpos: number[] = []
 let mySprite: Sprite = null
+let The_grid: number[][] = []
 namespace userconfig { export const ARCADE_SCREEN_WIDTH = 176; export const ARCADE_SCREEN_HEIGHT = 128; }
+The_grid = [[randint(1, 7)]]
 tiles.setCurrentTilemap(tilemap`level`)
 Reset_board()
 mySprite = sprites.create(assets.image`circlesimple`, SpriteKind.Cursor)
