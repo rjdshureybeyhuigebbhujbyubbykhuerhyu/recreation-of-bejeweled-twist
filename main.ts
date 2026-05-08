@@ -45,13 +45,13 @@ function Reset_board () {
         assets.tile`geen`
         ]
         The_grid = [[randint(1, 7)]]
-        for (let i = 0; i <= 7; i++) {
-            if (The_grid.length - 1 != i) {
+        for (let k = 0; k <= 7; k++) {
+            if (The_grid.length - 1 != k) {
                 The_grid.push([randint(1, 7)])
             }
-            for (let j = 0; j <= 7; j++) {
-                if (The_grid[i].length - 1 != j) {
-                    The_grid[i].push(randint(1, 3))
+            for (let l = 0; l <= 7; l++) {
+                if (The_grid[k].length - 1 != l) {
+                    The_grid[k].push(randint(1, 7))
                 }
             }
         }
@@ -70,6 +70,24 @@ function changecursorpos (col: number, row: number) {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(-1, 0)
 })
+function duplicate2DList (array: number[][]) {
+    clone = [[0]]
+    for (let index = 0; index <= array.length - 1; index++) {
+        if (index == 0) {
+            clone[index] = []
+        } else {
+            clone.push([])
+        }
+        for (let j = 0; j <= array[index].length - 1; j++) {
+            if (clone[index].length - 1 < array[index].length - 1) {
+                clone[index].push(array[index][j])
+            } else {
+                clone[index][j] = array[index][j]
+            }
+        }
+    }
+    return clone
+}
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(1, 0)
 })
@@ -82,25 +100,28 @@ function placeCursorOnGrid (col: number, row: number) {
     mySprite.y += 8
 }
 function updateBoard () {
-    for (let k = 0; k <= 7; k++) {
-        for (let l = 0; l <= 7; l++) {
-            tiles.setTileAt(tiles.getTileLocation(l + 3, k), gemlist[The_grid[k][l]])
+    for (let m = 0; m <= 7; m++) {
+        for (let n = 0; n <= 7; n++) {
+            tiles.setTileAt(tiles.getTileLocation(n + 3, m), gemlist[The_grid[m][n]])
         }
     }
 }
 function Rotate (col: number, row: number) {
+    dupedgrid = duplicate2DList(The_grid)
     cba = [0, 1]
-    cba = [The_grid[row + 1][col]]
-    cba.push(The_grid[row][col])
-    cba.push(The_grid[row][col + 1])
-    cba.push(The_grid[row + 1][col + 1])
-    The_grid[row][col] = cba[0]
-    The_grid[row][col + 1] = cba[1]
-    The_grid[row + 1][col + 1] = cba[2]
-    The_grid[row + 1][col] = cba[3]
-    return The_grid
+    cba = [dupedgrid[row + 1][col]]
+    cba.push(dupedgrid[row][col])
+    cba.push(dupedgrid[row][col + 1])
+    cba.push(dupedgrid[row + 1][col + 1])
+    dupedgrid[row][col] = cba[0]
+    dupedgrid[row][col + 1] = cba[1]
+    dupedgrid[row + 1][col + 1] = cba[2]
+    dupedgrid[row + 1][col] = cba[3]
+    return dupedgrid
 }
 let cba: number[] = []
+let dupedgrid: number[][] = []
+let clone: number[][] = []
 let gemlist: Image[] = []
 let tries = 0
 let latestmatchedcall = false
