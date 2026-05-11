@@ -42,10 +42,10 @@ function userSpin () {
                 clearGems(matchloc)
             }
         }
+        theGravityOfTheSituation()
     } else {
     	
     }
-    theGravityOfTheSituation()
     updateBoard()
 }
 function isAMovePossible () {
@@ -103,27 +103,51 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(-1, 0)
 })
 function theGravityOfTheSituation () {
-    for (let index = 0; index < 8; index++) {
-        for (let i = 0; i <= 7; i++) {
-            for (let j = 0; j <= 7; j++) {
-            	
+    updateBoard()
+    pause(60)
+    while (true) {
+        for (let index = 0; index < 8; index++) {
+            didGrav = false
+            for (let row = 0; row <= 6; row++) {
+                for (let col = 0; col <= 7; col++) {
+                    if (The_grid[7 - row][7 - col] == 0) {
+                        didGrav = true
+                        The_grid[7 - row][7 - col] = The_grid[6 - row][7 - col]
+                        The_grid[6 - row][7 - col] = 0
+                    }
+                }
+            }
+            if (didGrav) {
+                updateBoard()
+                pause(60)
+            } else {
+                break;
+            }
+        }
+        matchloc = butLikeWhere()
+        if (matchloc[0] == -1) {
+            break;
+        } else {
+            while (matchloc[0] != -1) {
+                clearGems(matchloc)
+                matchloc = butLikeWhere()
             }
         }
     }
 }
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
-    for (let index = 0; index <= array.length - 1; index++) {
-        if (index == 0) {
-            clone[index] = []
+    for (let index2 = 0; index2 <= array.length - 1; index2++) {
+        if (index2 == 0) {
+            clone[index2] = []
         } else {
             clone.push([])
         }
-        for (let o = 0; o <= array[index].length - 1; o++) {
-            if (clone[index].length - 1 < array[index].length - 1) {
-                clone[index].push(array[index][o])
+        for (let q = 0; q <= array[index2].length - 1; q++) {
+            if (clone[index2].length - 1 < array[index2].length - 1) {
+                clone[index2].push(array[index2][q])
             } else {
-                clone[index][o] = array[index][o]
+                clone[index2][q] = array[index2][q]
             }
         }
     }
@@ -157,12 +181,12 @@ function clearGems (identifiedMatch: number[]) {
         }
     }
     if (identifiedMatch[2] == 0) {
-        for (let index2 = 0; index2 <= lengthofmatch - 1; index2++) {
-            The_grid[identifiedMatch[0]][index2 + identifiedMatch[1]] = 0
+        for (let index22 = 0; index22 <= lengthofmatch - 1; index22++) {
+            The_grid[identifiedMatch[0]][index22 + identifiedMatch[1]] = 0
         }
     } else {
-        for (let index2 = 0; index2 <= lengthofmatch - 1; index2++) {
-            The_grid[index2 + identifiedMatch[0]][identifiedMatch[1]] = 0
+        for (let index23 = 0; index23 <= lengthofmatch - 1; index23++) {
+            The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = 0
         }
     }
 }
@@ -172,9 +196,9 @@ function placeCursorOnGrid (col: number, row: number) {
     mySprite.y += 8
 }
 function updateBoard () {
-    for (let p = 0; p <= 7; p++) {
-        for (let q = 0; q <= 7; q++) {
-            tiles.setTileAt(tiles.getTileLocation(q + 3, p), gemlist[The_grid[p][q]])
+    for (let r = 0; r <= 7; r++) {
+        for (let s = 0; s <= 7; s++) {
+            tiles.setTileAt(tiles.getTileLocation(s + 3, r), gemlist[The_grid[r][s]])
         }
     }
 }
@@ -193,20 +217,20 @@ function Rotate (col: number, row: number) {
 }
 function butLikeWhere () {
     if (The_grid[0][0] != 99) {
-        for (let r = 0; r <= 7; r++) {
-            for (let s = 0; s <= 7; s++) {
-                if (The_grid[r][s] != 0) {
-                    if (s < 6) {
-                        if (The_grid[r][s] == The_grid[r][s + 1]) {
-                            if (The_grid[r][s] == The_grid[r][s + 2]) {
-                                return [r, s, 0]
+        for (let t = 0; t <= 7; t++) {
+            for (let u = 0; u <= 7; u++) {
+                if (The_grid[t][u] != 0) {
+                    if (u < 6) {
+                        if (The_grid[t][u] == The_grid[t][u + 1]) {
+                            if (The_grid[t][u] == The_grid[t][u + 2]) {
+                                return [t, u, 0]
                             }
                         }
                     }
-                    if (r < 6) {
-                        if (The_grid[r][s] == The_grid[r + 1][s]) {
-                            if (The_grid[r][s] == The_grid[r + 2][s]) {
-                                return [r, s, 1]
+                    if (t < 6) {
+                        if (The_grid[t][u] == The_grid[t + 1][u]) {
+                            if (The_grid[t][u] == The_grid[t + 2][u]) {
+                                return [t, u, 1]
                             }
                         }
                     }
@@ -220,6 +244,7 @@ let cba: number[] = []
 let dupedgrid: number[][] = []
 let lengthofmatch = 0
 let clone: number[][] = []
+let didGrav = false
 let gemlist: Image[] = []
 let tries = 0
 let latestmatchedcall = false
