@@ -41,11 +41,11 @@ function userSpin () {
             } else {
                 clearGems(matchloc)
             }
-            break;
         }
     } else {
     	
     }
+    theGravityOfTheSituation()
     updateBoard()
 }
 function isAMovePossible () {
@@ -102,6 +102,15 @@ function changecursorpos (col: number, row: number) {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(-1, 0)
 })
+function theGravityOfTheSituation () {
+    for (let index = 0; index < 8; index++) {
+        for (let i = 0; i <= 7; i++) {
+            for (let j = 0; j <= 7; j++) {
+            	
+            }
+        }
+    }
+}
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
     for (let index = 0; index <= array.length - 1; index++) {
@@ -225,4 +234,10 @@ Reset_board()
 mySprite = sprites.create(assets.image`circlesimple`, SpriteKind.Cursor)
 placeCursorOnGrid(0, 0)
 truecursorpos = [0, 0]
-scene.setBackgroundColor(13)
+scene.setBackgroundColor(12)
+animation.runImageAnimation(
+mySprite,
+assets.animation`spinnycircle`,
+20,
+true
+)
