@@ -139,7 +139,7 @@ function clearGems (identifiedMatch: number[]) {
         }
     } else {
         while (lengthofmatch + identifiedMatch[0] < 8) {
-            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] == The_grid[identifiedMatch[0]][lengthofmatch + identifiedMatch[1]]) {
+            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] == The_grid[lengthofmatch + identifiedMatch[0]][identifiedMatch[1]]) {
                 lengthofmatch += 1
                 console.log("+1")
             } else {
@@ -152,7 +152,9 @@ function clearGems (identifiedMatch: number[]) {
             The_grid[identifiedMatch[0]][index2 + identifiedMatch[1]] = 0
         }
     } else {
-    	
+        for (let index2 = 0; index2 <= lengthofmatch - 1; index2++) {
+            The_grid[index2 + identifiedMatch[0]][identifiedMatch[1]] = 0
+        }
     }
 }
 function placeCursorOnGrid (col: number, row: number) {
