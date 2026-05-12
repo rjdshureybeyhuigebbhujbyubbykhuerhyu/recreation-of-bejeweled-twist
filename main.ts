@@ -7,15 +7,15 @@ function areThereMatchedGems (array: number[][]) {
             for (let j = 0; j <= 7; j++) {
                 if (array[i][j] != 0) {
                     if (j < 6) {
-                        if (array[i][j] == array[i][j + 1]) {
-                            if (array[i][j] == array[i][j + 2]) {
+                        if (array[i][j] % 7 == array[i][j + 1] % 7) {
+                            if (array[i][j] % 7 == array[i][j + 2] % 7) {
                                 return true
                             }
                         }
                     }
                     if (i < 6) {
-                        if (array[i][j] == array[i + 1][j]) {
-                            if (array[i][j] == array[i + 2][j]) {
+                        if (array[i][j] % 7 == array[i + 1][j] % 7) {
+                            if (array[i][j] == array[i + 2][j] % 7) {
                                 return true
                             }
                         }
@@ -70,7 +70,14 @@ function Reset_board () {
         assets.tile`orang`,
         assets.tile`whit`,
         assets.tile`ourple`,
-        assets.tile`geen`
+        assets.tile`geen`,
+        assets.tile`myTile`,
+        assets.tile`red0`,
+        assets.tile`yellow0`,
+        assets.tile`orang0`,
+        assets.tile`whit0`,
+        assets.tile`ourple0`,
+        assets.tile`geen0`
         ]
         The_grid = [[randint(1, 7)]]
         for (let m = 0; m <= 7; m++) {
@@ -104,15 +111,15 @@ function addGemAlgo () {
             didGravII = true
             dupedgrid = duplicate2DList(The_grid)
             for (let index = 0; index < 8; index++) {
-                for (let index = 0; index <= 7; index++) {
-                    if (dupedgrid[0][index] == 0) {
+                for (let index2 = 0; index2 <= 7; index2++) {
+                    if (dupedgrid[0][index2] == 0) {
                         temp = randint(1, 7)
                         fate.push(temp)
                         if (fate.indexOf(temp) < 0) {
                             fate.push(temp)
                         }
                         console.log("+1, =" + fate.length)
-                        dupedgrid[0][index] = fate[fate.length - 1]
+                        dupedgrid[0][index2] = fate[fate.length - 1]
                     }
                 }
                 didGravII = false
@@ -127,12 +134,12 @@ function addGemAlgo () {
                 }
                 console.log("grav with " + fate.length)
             }
-            for (let index = 0; index <= 7; index++) {
-                for (let i = 0; i <= 7; i++) {
-                    if (dupedgrid[i][index] == 0) {
+            for (let index3 = 0; index3 <= 7; index3++) {
+                for (let o = 0; o <= 7; o++) {
+                    if (dupedgrid[o][index3] == 0) {
                         fate.push(randint(1, 7))
                         console.log("bandaid fix proc'd")
-                        dupedgrid[i][index] = fate[fate.length - 1]
+                        dupedgrid[o][index3] = fate[fate.length - 1]
                     }
                 }
             }
@@ -183,12 +190,12 @@ function theGravityOfTheSituation () {
         for (let index = 0; index < 8; index++) {
             updateBoard()
             didGrav = false
-            for (let row = 0; row <= 6; row++) {
-                for (let col = 0; col <= 7; col++) {
-                    if (The_grid[7 - row][7 - col] == 0) {
+            for (let row2 = 0; row2 <= 6; row2++) {
+                for (let col2 = 0; col2 <= 7; col2++) {
+                    if (The_grid[7 - row2][7 - col2] == 0) {
                         didGrav = true
-                        The_grid[7 - row][7 - col] = The_grid[6 - row][7 - col]
-                        The_grid[6 - row][7 - col] = 0
+                        The_grid[7 - row2][7 - col2] = The_grid[6 - row2][7 - col2]
+                        The_grid[6 - row2][7 - col2] = 0
                     }
                 }
             }
@@ -196,7 +203,7 @@ function theGravityOfTheSituation () {
             updateBoard()
             for (let completelynewloopvar = 0; completelynewloopvar <= 7; completelynewloopvar++) {
                 if (The_grid[0][completelynewloopvar] == 0) {
-                    // Why in the world is this necessary. 
+                    // Why in the world is this necessary.
                     // Too bad!
                     gemAlgoReturn = addGemAlgo()
                     The_grid[0][completelynewloopvar] = gemAlgoReturn
@@ -221,17 +228,17 @@ function theGravityOfTheSituation () {
 }
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
-    for (let index2 = 0; index2 <= array.length - 1; index2++) {
-        if (index2 == 0) {
-            clone[index2] = []
+    for (let index22 = 0; index22 <= array.length - 1; index22++) {
+        if (index22 == 0) {
+            clone[index22] = []
         } else {
             clone.push([])
         }
-        for (let q = 0; q <= array[index2].length - 1; q++) {
-            if (clone[index2].length - 1 < array[index2].length - 1) {
-                clone[index2].push(array[index2][q])
+        for (let q = 0; q <= array[index22].length - 1; q++) {
+            if (clone[index22].length - 1 < array[index22].length - 1) {
+                clone[index22].push(array[index22][q])
             } else {
-                clone[index2][q] = array[index2][q]
+                clone[index22][q] = array[index22][q]
             }
         }
     }
@@ -244,6 +251,8 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(0, 1)
 })
 function clearGems (identifiedMatch: number[]) {
+    updateBoard()
+    pause(20)
     lengthofmatch = 3
     if (identifiedMatch[2] == 0) {
         while (lengthofmatch + identifiedMatch[1] < 8) {
@@ -264,15 +273,26 @@ function clearGems (identifiedMatch: number[]) {
             }
         }
     }
+    matchColor = The_grid[identifiedMatch[0]][0 + identifiedMatch[1]]
     if (identifiedMatch[2] == 0) {
-        for (let index22 = 0; index22 <= lengthofmatch - 1; index22++) {
-            The_grid[identifiedMatch[0]][index22 + identifiedMatch[1]] = 0
+        for (let index222 = 0; index222 <= lengthofmatch - 1; index222++) {
+            if (index222 == 2 && lengthofmatch == 4) {
+                The_grid[identifiedMatch[0]][index222 + identifiedMatch[1]] = matchColor + 7
+            } else {
+                The_grid[identifiedMatch[0]][index222 + identifiedMatch[1]] = 0
+            }
         }
     } else {
         for (let index23 = 0; index23 <= lengthofmatch - 1; index23++) {
-            The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = 0
+            if (index23 == 2 && lengthofmatch == 4) {
+                The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = matchColor + 7
+            } else {
+                The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = 0
+            }
         }
     }
+    updateBoard()
+    pause(20)
 }
 function placeCursorOnGrid (col: number, row: number) {
     tiles.placeOnTile(mySprite, tiles.getTileLocation(col + 3, row))
@@ -305,15 +325,15 @@ function butLikeWhere () {
             for (let u = 0; u <= 7; u++) {
                 if (The_grid[t][u] != 0) {
                     if (u < 6) {
-                        if (The_grid[t][u] == The_grid[t][u + 1]) {
-                            if (The_grid[t][u] == The_grid[t][u + 2]) {
+                        if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
+                            if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
                                 return [t, u, 0]
                             }
                         }
                     }
                     if (t < 6) {
-                        if (The_grid[t][u] == The_grid[t + 1][u]) {
-                            if (The_grid[t][u] == The_grid[t + 2][u]) {
+                        if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
+                            if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
                                 return [t, u, 1]
                             }
                         }
@@ -325,6 +345,7 @@ function butLikeWhere () {
     return [-1, -1, -1]
 }
 let cba: number[] = []
+let matchColor = 0
 let lengthofmatch = 0
 let clone: number[][] = []
 let gemAlgoReturn = 0

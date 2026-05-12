@@ -18,6 +18,20 @@ namespace myTiles {
     export const tile7 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const tile8 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile10 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile9 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile11 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile12 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile13 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile14 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile15 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -31,7 +45,7 @@ namespace myTiles {
 . . . . . . . . . . . 
 . . . . . . . . . . . 
 . . . . . . . . . . . 
-`, [myTiles.transparency16,myTiles.tile8], TileScale.Sixteen);
+`, [myTiles.transparency16,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile12,myTiles.tile13,myTiles.tile14,myTiles.tile15], TileScale.Sixteen);
         }
         return null;
     })
@@ -55,6 +69,20 @@ namespace myTiles {
             case "tile7":return tile7;
             case "geen":
             case "tile8":return tile8;
+            case "red0":
+            case "tile10":return tile10;
+            case "myTile":
+            case "tile9":return tile9;
+            case "yellow0":
+            case "tile11":return tile11;
+            case "orang0":
+            case "tile12":return tile12;
+            case "whit0":
+            case "tile13":return tile13;
+            case "ourple0":
+            case "tile14":return tile14;
+            case "geen0":
+            case "tile15":return tile15;
         }
         return null;
     })
