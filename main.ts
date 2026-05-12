@@ -95,6 +95,81 @@ function Reset_board () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     userSpin()
 })
+function addGemAlgo () {
+    if (!(fated)) {
+        while (true) {
+            while (fate.length > 0) {
+                fate.shift()
+            }
+            didGravII = true
+            dupedgrid = duplicate2DList(The_grid)
+            for (let index = 0; index < 8; index++) {
+                for (let index = 0; index <= 7; index++) {
+                    if (dupedgrid[0][index] == 0) {
+                        temp = randint(1, 7)
+                        fate.push(temp)
+                        if (fate.indexOf(temp) < 0) {
+                            fate.push(temp)
+                        }
+                        console.log("+1, =" + fate.length)
+                        dupedgrid[0][index] = fate[fate.length - 1]
+                    }
+                }
+                didGravII = false
+                for (let row = 0; row <= 6; row++) {
+                    for (let col = 0; col <= 7; col++) {
+                        if (dupedgrid[7 - row][7 - col] == 0) {
+                            didGravII = true
+                            dupedgrid[7 - row][7 - col] = dupedgrid[6 - row][7 - col]
+                            dupedgrid[6 - row][7 - col] = 0
+                        }
+                    }
+                }
+                console.log("grav with " + fate.length)
+            }
+            for (let index = 0; index <= 7; index++) {
+                for (let i = 0; i <= 7; i++) {
+                    if (dupedgrid[i][index] == 0) {
+                        fate.push(randint(1, 7))
+                        console.log("bandaid fix proc'd")
+                        dupedgrid[i][index] = fate[fate.length - 1]
+                    }
+                }
+            }
+            if (!(fate[0] > 0)) {
+                fate.shift()
+            }
+            savedGrid = duplicate2DList(The_grid)
+            The_grid = duplicate2DList(dupedgrid)
+            if (isAMovePossible() || areThereMatchedGems(The_grid)) {
+                The_grid = duplicate2DList(savedGrid)
+                break;
+            } else {
+                The_grid = duplicate2DList(savedGrid)
+            }
+        }
+        fated = true
+        if (!(fate[0] > 0)) {
+            console.log("crap (" + fate + ")")
+        } else {
+            console.log(":)")
+            return fate.shift()
+        }
+        return 0
+    } else {
+        console.log("I sure hope this isn't 0: " + fate.length)
+        if (!(fate[0] > 0)) {
+            fate.shift()
+        }
+        if (!(fate[0] > 0)) {
+            console.log("crap (" + fate[0] + ")")
+        } else {
+            console.log(":)")
+            return fate.shift()
+        }
+        return 0
+    }
+}
 function changecursorpos (col: number, row: number) {
     truecursorpos = [Math.constrain(truecursorpos[0] + col, 0, 6), Math.constrain(truecursorpos[1] + row, 0, 6)]
     placeCursorOnGrid(truecursorpos[0], truecursorpos[1])
@@ -103,10 +178,10 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(-1, 0)
 })
 function theGravityOfTheSituation () {
-    updateBoard()
-    pause(60)
+    pause(20)
     while (true) {
         for (let index = 0; index < 8; index++) {
+            updateBoard()
             didGrav = false
             for (let row = 0; row <= 6; row++) {
                 for (let col = 0; col <= 7; col++) {
@@ -117,13 +192,22 @@ function theGravityOfTheSituation () {
                     }
                 }
             }
-            if (didGrav) {
-                updateBoard()
-                pause(60)
-            } else {
+            pause(60)
+            updateBoard()
+            for (let completelynewloopvar = 0; completelynewloopvar <= 7; completelynewloopvar++) {
+                if (The_grid[0][completelynewloopvar] == 0) {
+                    // Why in the world is this necessary. 
+                    // Too bad!
+                    gemAlgoReturn = addGemAlgo()
+                    The_grid[0][completelynewloopvar] = gemAlgoReturn
+                }
+            }
+            updateBoard()
+            if (!(didGrav)) {
                 break;
             }
         }
+        fated = false
         matchloc = butLikeWhere()
         if (matchloc[0] == -1) {
             break;
@@ -241,10 +325,15 @@ function butLikeWhere () {
     return [-1, -1, -1]
 }
 let cba: number[] = []
-let dupedgrid: number[][] = []
 let lengthofmatch = 0
 let clone: number[][] = []
+let gemAlgoReturn = 0
 let didGrav = false
+let savedGrid: number[][] = []
+let temp = 0
+let dupedgrid: number[][] = []
+let didGravII = false
+let fated = false
 let gemlist: Image[] = []
 let tries = 0
 let latestmatchedcall = false
@@ -252,7 +341,9 @@ let matchloc: number[] = []
 let truecursorpos: number[] = []
 let mySprite: Sprite = null
 let The_grid: number[][] = []
+let fate: number[] = []
 namespace userconfig { export const ARCADE_SCREEN_WIDTH = 176; export const ARCADE_SCREEN_HEIGHT = 128; }
+fate = [0]
 The_grid = [[randint(1, 7)]]
 tiles.setCurrentTilemap(tilemap`level`)
 Reset_board()
