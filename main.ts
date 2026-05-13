@@ -2,6 +2,26 @@ namespace SpriteKind {
     export const Cursor = SpriteKind.create()
     export const ScoreNumber = SpriteKind.create()
 }
+function BOOM (boomx: number, boomy: number, protectedNewlyspawnedX: number, protectedNewlyspawnedY: number) {
+    for (let index = 0; index <= 2; index++) {
+        for (let index2 = 0; index2 <= 2; index2++) {
+            deleteX = Math.constrain(boomx + (index - 1), 0, 7)
+            deleteY = Math.constrain(boomy + (index2 - 1), 0, 7)
+            if (!(deleteX == protectedNewlyspawnedX && deleteY == protectedNewlyspawnedY)) {
+                if (deleteX != boomx || deleteY != boomy) {
+                    if (The_grid[deleteX][deleteY] > 7) {
+                        if (The_grid[deleteX][deleteY] < 15) {
+                            BOOM(deleteX, deleteY, -1, -1)
+                        }
+                    }
+                }
+                The_grid[deleteX][deleteY] = 0
+            }
+        }
+    }
+    updateBoard()
+    queuedpause = true
+}
 function areThereMatchedGems (array: number[][]) {
     if (array[0][0] != 99) {
         for (let i = 0; i <= 7; i++) {
@@ -117,15 +137,14 @@ function addGemAlgo () {
             didGravII = true
             dupedgrid = duplicate2DList(The_grid)
             for (let index = 0; index < 8; index++) {
-                for (let index2 = 0; index2 <= 7; index2++) {
-                    if (dupedgrid[0][index2] == 0) {
+                for (let index22 = 0; index22 <= 7; index22++) {
+                    if (dupedgrid[0][index22] == 0) {
                         temp = randint(1, 7)
                         fate.push(temp)
                         if (fate.indexOf(temp) < 0) {
                             fate.push(temp)
                         }
-                        console.log("+1, =" + fate.length)
-                        dupedgrid[0][index2] = fate[fate.length - 1]
+                        dupedgrid[0][index22] = fate[fate.length - 1]
                     }
                 }
                 didGravII = false
@@ -138,14 +157,13 @@ function addGemAlgo () {
                         }
                     }
                 }
-                console.log("grav with " + fate.length)
             }
-            for (let index3 = 0; index3 <= 7; index3++) {
+            for (let index32 = 0; index32 <= 7; index32++) {
                 for (let o = 0; o <= 7; o++) {
-                    if (dupedgrid[o][index3] == 0) {
+                    if (dupedgrid[o][index32] == 0) {
                         fate.push(randint(1, 7))
                         console.log("bandaid fix proc'd")
-                        dupedgrid[o][index3] = fate[fate.length - 1]
+                        dupedgrid[o][index32] = fate[fate.length - 1]
                     }
                 }
             }
@@ -170,14 +188,12 @@ function addGemAlgo () {
         }
         return 0
     } else {
-        console.log("I sure hope this isn't 0: " + fate.length)
         if (!(fate[0] > 0)) {
             fate.shift()
         }
         if (!(fate[0] > 0)) {
         	
         } else {
-            console.log(":)")
             return fate.shift()
         }
         return 0
@@ -234,17 +250,17 @@ function theGravityOfTheSituation () {
 }
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
-    for (let index22 = 0; index22 <= array.length - 1; index22++) {
-        if (index22 == 0) {
-            clone[index22] = []
+    for (let index222 = 0; index222 <= array.length - 1; index222++) {
+        if (index222 == 0) {
+            clone[index222] = []
         } else {
             clone.push([])
         }
-        for (let q = 0; q <= array[index22].length - 1; q++) {
-            if (clone[index22].length - 1 < array[index22].length - 1) {
-                clone[index22].push(array[index22][q])
+        for (let q = 0; q <= array[index222].length - 1; q++) {
+            if (clone[index222].length - 1 < array[index222].length - 1) {
+                clone[index222].push(array[index222][q])
             } else {
-                clone[index22][q] = array[index22][q]
+                clone[index222][q] = array[index222][q]
             }
         }
     }
@@ -262,7 +278,7 @@ function clearGems (identifiedMatch: number[]) {
     lengthofmatch = 3
     if (identifiedMatch[2] == 0) {
         while (lengthofmatch + identifiedMatch[1] < 8) {
-            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] == The_grid[identifiedMatch[0]][lengthofmatch + identifiedMatch[1]]) {
+            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] % 7 == The_grid[identifiedMatch[0]][lengthofmatch + identifiedMatch[1]] % 7) {
                 lengthofmatch += 1
                 console.log("+1")
             } else {
@@ -271,7 +287,7 @@ function clearGems (identifiedMatch: number[]) {
         }
     } else {
         while (lengthofmatch + identifiedMatch[0] < 8) {
-            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] == The_grid[lengthofmatch + identifiedMatch[0]][identifiedMatch[1]]) {
+            if (The_grid[identifiedMatch[0]][identifiedMatch[1]] % 7 == The_grid[lengthofmatch + identifiedMatch[0]][identifiedMatch[1]] % 7) {
                 lengthofmatch += 1
                 console.log("+1")
             } else {
@@ -280,21 +296,31 @@ function clearGems (identifiedMatch: number[]) {
         }
     }
     matchColor = The_grid[identifiedMatch[0]][0 + identifiedMatch[1]]
+    protectloc = [-1, -1]
     if (identifiedMatch[2] == 0) {
         while (matchColor > 7) {
             matchColor += -7
         }
-        for (let index222 = 0; index222 <= lengthofmatch - 1; index222++) {
-            if (index222 == 2 && lengthofmatch == 4) {
-                The_grid[identifiedMatch[0]][index222 + identifiedMatch[1]] = matchColor + 7
+        for (let index2222 = 0; index2222 <= lengthofmatch - 1; index2222++) {
+            if (The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] > 7 && The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] <= 14) {
+                BOOM(identifiedMatch[0], index2222 + identifiedMatch[1], protectloc[0], protectloc[1])
+            }
+            if (index2222 == 2 && lengthofmatch == 4) {
+                The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] = matchColor + 7
+                protectloc = [identifiedMatch[0], index2222 + identifiedMatch[1]]
             } else {
-                The_grid[identifiedMatch[0]][index222 + identifiedMatch[1]] = 0
+                The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] = 0
             }
         }
     } else {
         for (let index23 = 0; index23 <= lengthofmatch - 1; index23++) {
+            console.log(The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]])
+            if (The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] > 7 && The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] <= 14) {
+                BOOM(index23 + identifiedMatch[0], identifiedMatch[1], protectloc[0], protectloc[1])
+            }
             if (index23 == 2 && lengthofmatch == 4) {
                 The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = matchColor + 7
+                protectloc = [index23 + identifiedMatch[0], identifiedMatch[1]]
             } else {
                 The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = 0
             }
@@ -302,6 +328,10 @@ function clearGems (identifiedMatch: number[]) {
     }
     sco_re += 100
     updateBoard()
+    if (queuedpause) {
+        queuedpause = false
+        pause(100)
+    }
     pause(20)
 }
 function placeCursorOnGrid (col: number, row: number) {
@@ -359,6 +389,7 @@ let yoffset = 0
 let xoffset = 0
 let list_score: number[] = []
 let cba: number[] = []
+let protectloc: number[] = []
 let matchColor = 0
 let lengthofmatch = 0
 let clone: number[][] = []
@@ -374,6 +405,9 @@ let tries = 0
 let latestmatchedcall = false
 let matchloc: number[] = []
 let sco_re = 0
+let queuedpause = false
+let deleteY = 0
+let deleteX = 0
 let mySprite: Sprite = null
 let The_grid: number[][] = []
 let fate: number[] = []
