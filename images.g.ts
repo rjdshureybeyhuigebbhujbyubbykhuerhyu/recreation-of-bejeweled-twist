@@ -38,6 +38,106 @@ namespace myImages {
 ..........ffffffffffff..........
 ................................
 `;
+            case "image2":
+            case "haha one":return img`
+. 1 . 
+. 1 . 
+. 1 . 
+. 1 . 
+. 1 . 
+. 1 . 
+. 1 . 
+`;
+            case "image3":
+            case "myImage":return img`
+1 1 1 
+. . 1 
+. . 1 
+1 1 1 
+1 . . 
+1 . . 
+1 1 1 
+`;
+            case "image4":
+            case "myImage0":return img`
+1 1 1 
+. . 1 
+. . 1 
+1 1 1 
+. . 1 
+. . 1 
+1 1 1 
+`;
+            case "image5":
+            case "myImage1":return img`
+. . 1 
+. 1 1 
+1 . 1 
+1 1 1 
+. . 1 
+. . 1 
+. . 1 
+`;
+            case "image11":
+            case "myImage7":return img`
+1 1 1 
+1 . 1 
+1 . 1 
+1 . 1 
+1 . 1 
+1 . 1 
+1 1 1 
+`;
+            case "image6":
+            case "myImage2":return img`
+1 1 1 
+1 . . 
+1 . . 
+1 1 1 
+. . 1 
+. . 1 
+1 1 1 
+`;
+            case "image7":
+            case "myImage3":return img`
+1 1 1 
+1 . 1 
+1 . . 
+1 1 1 
+1 . 1 
+1 . 1 
+1 1 1 
+`;
+            case "image8":
+            case "myImage4":return img`
+1 1 1 
+. . 1 
+. . 1 
+. 1 . 
+. 1 . 
+1 . . 
+1 . . 
+`;
+            case "image9":
+            case "myImage5":return img`
+1 1 1 
+1 . 1 
+1 . 1 
+1 1 1 
+1 . 1 
+1 . 1 
+1 1 1 
+`;
+            case "image10":
+            case "myImage6":return img`
+1 1 1 
+1 . 1 
+1 . 1 
+1 1 1 
+. . 1 
+1 . 1 
+1 1 1 
+`;
         }
         return null;
     })

@@ -4,6 +4,56 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "circlesimple"
     },
+    "image2": {
+        "data": "hwQDAAcAAAAAAAAAERERAQAAAAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "haha one"
+    },
+    "image3": {
+        "data": "hwQDAAcAAAABEBEBARAAARERAAE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage"
+    },
+    "image4": {
+        "data": "hwQDAAcAAAABEAABARAAAREREQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage0"
+    },
+    "image5": {
+        "data": "hwQDAAcAAAAAEQAAEBAAABEREQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage1"
+    },
+    "image11": {
+        "data": "hwQDAAcAAAAREREBAQAAAREREQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage7"
+    },
+    "image6": {
+        "data": "hwQDAAcAAAAREQABARAAAQEQEQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage2"
+    },
+    "image7": {
+        "data": "hwQDAAcAAAAREREBARAAAREQEQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage3"
+    },
+    "image8": {
+        "data": "hwQDAAcAAAABABABARABABEBAAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage4"
+    },
+    "image9": {
+        "data": "hwQDAAcAAAAREREBARAAAREREQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage5"
+    },
+    "image10": {
+        "data": "hwQDAAcAAAARERABARAAAREREQE=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "myImage6"
+    },
     "anim1": {
         "namespace": "myAnimations",
         "id": "anim1",

@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const Cursor = SpriteKind.create()
+    export const ScoreNumber = SpriteKind.create()
 }
 function areThereMatchedGems (array: number[][]) {
     if (array[0][0] != 99) {
@@ -28,6 +29,11 @@ function areThereMatchedGems (array: number[][]) {
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(0, -1)
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (controller.down.isPressed()) {
+        sco_re = game.askForNumber("enter score", 10)
+    }
 })
 function userSpin () {
     The_grid = Rotate(truecursorpos[0], truecursorpos[1])
@@ -294,6 +300,7 @@ function clearGems (identifiedMatch: number[]) {
             }
         }
     }
+    sco_re += 100
     updateBoard()
     pause(20)
 }
@@ -347,6 +354,10 @@ function butLikeWhere () {
     }
     return [-1, -1, -1]
 }
+let scoreNums: number[] = []
+let yoffset = 0
+let xoffset = 0
+let list_score: number[] = []
 let cba: number[] = []
 let matchColor = 0
 let lengthofmatch = 0
@@ -362,11 +373,25 @@ let gemlist: Image[] = []
 let tries = 0
 let latestmatchedcall = false
 let matchloc: number[] = []
-let truecursorpos: number[] = []
+let sco_re = 0
 let mySprite: Sprite = null
 let The_grid: number[][] = []
 let fate: number[] = []
+let truecursorpos: number[] = []
+truecursorpos = [0, 0]
 namespace userconfig { export const ARCADE_SCREEN_WIDTH = 176; export const ARCADE_SCREEN_HEIGHT = 128; }
+let nums = [
+assets.image`myImage7`,
+assets.image`haha one`,
+assets.image`myImage`,
+assets.image`myImage0`,
+assets.image`myImage1`,
+assets.image`myImage2`,
+assets.image`myImage3`,
+assets.image`myImage4`,
+assets.image`myImage5`,
+assets.image`myImage6`
+]
 fate = [0]
 The_grid = [[randint(1, 7)]]
 tiles.setCurrentTilemap(tilemap`level`)
@@ -381,3 +406,32 @@ assets.animation`spinnycircle`,
 20,
 true
 )
+game.onUpdate(function () {
+    sprites.destroyAllSpritesOfKind(SpriteKind.ScoreNumber)
+    list_score = []
+    temp = sco_re
+    while (temp != 0) {
+        list_score.unshift(temp % 10)
+        temp = temp / 10
+        temp = temp - temp % 1
+    }
+    if (list_score.length == 0) {
+        list_score.unshift(0)
+    }
+    xoffset = 2
+    yoffset = 5
+    scoreNums = []
+    for (let value of list_score) {
+        if (value == 1) {
+            xoffset += -1
+        }
+        sprites.create(nums[value], SpriteKind.ScoreNumber).setPosition(xoffset, yoffset)
+        if (value != 1) {
+            xoffset += 1
+        }
+        xoffset += 3
+    }
+    for (let value2 of sprites.allOfKind(SpriteKind.ScoreNumber)) {
+        value2.x += (48 - xoffset) / 2 + 2
+    }
+})
