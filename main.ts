@@ -157,7 +157,7 @@ function addGemAlgo () {
         }
         fated = true
         if (!(fate[0] > 0)) {
-            console.log("crap (" + fate + ")")
+        	
         } else {
             console.log(":)")
             return fate.shift()
@@ -169,7 +169,7 @@ function addGemAlgo () {
             fate.shift()
         }
         if (!(fate[0] > 0)) {
-            console.log("crap (" + fate[0] + ")")
+        	
         } else {
             console.log(":)")
             return fate.shift()
@@ -275,6 +275,9 @@ function clearGems (identifiedMatch: number[]) {
     }
     matchColor = The_grid[identifiedMatch[0]][0 + identifiedMatch[1]]
     if (identifiedMatch[2] == 0) {
+        while (matchColor > 7) {
+            matchColor += -7
+        }
         for (let index222 = 0; index222 <= lengthofmatch - 1; index222++) {
             if (index222 == 2 && lengthofmatch == 4) {
                 The_grid[identifiedMatch[0]][index222 + identifiedMatch[1]] = matchColor + 7
