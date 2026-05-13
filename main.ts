@@ -3,6 +3,7 @@ namespace SpriteKind {
     export const ScoreNumber = SpriteKind.create()
 }
 function BOOM (boomx: number, boomy: number, protectedNewlyspawnedX: number, protectedNewlyspawnedY: number) {
+    bogusPoints = 1
     for (let index = 0; index <= 2; index++) {
         for (let index2 = 0; index2 <= 2; index2++) {
             deleteX = Math.constrain(boomx + (index - 1), 0, 7)
@@ -20,6 +21,8 @@ function BOOM (boomx: number, boomy: number, protectedNewlyspawnedX: number, pro
         }
     }
     updateBoard()
+    score(100 * bogusPoints)
+    bogusPoints += 1
     queuedpause = true
 }
 function areThereMatchedGems (array: number[][]) {
@@ -58,6 +61,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 function userSpin () {
     The_grid = Rotate(truecursorpos[0], truecursorpos[1])
     matchloc = butLikeWhere()
+    cascadeMult = 0
     if (matchloc[0] != -1) {
         while (true) {
             // very inefficient. fix later?
@@ -158,15 +162,6 @@ function addGemAlgo () {
                     }
                 }
             }
-            for (let index32 = 0; index32 <= 7; index32++) {
-                for (let o = 0; o <= 7; o++) {
-                    if (dupedgrid[o][index32] == 0) {
-                        fate.push(randint(1, 7))
-                        console.log("bandaid fix proc'd")
-                        dupedgrid[o][index32] = fate[fate.length - 1]
-                    }
-                }
-            }
             if (!(fate[0] > 0)) {
                 fate.shift()
             }
@@ -183,7 +178,6 @@ function addGemAlgo () {
         if (!(fate[0] > 0)) {
         	
         } else {
-            console.log(":)")
             return fate.shift()
         }
         return 0
@@ -241,12 +235,17 @@ function theGravityOfTheSituation () {
         if (matchloc[0] == -1) {
             break;
         } else {
+            cascadeMult += 1
             while (matchloc[0] != -1) {
                 clearGems(matchloc)
                 matchloc = butLikeWhere()
             }
         }
     }
+}
+function score (num: number) {
+    sco_re += 100
+    console.log("scored " + num)
 }
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
@@ -280,7 +279,6 @@ function clearGems (identifiedMatch: number[]) {
         while (lengthofmatch + identifiedMatch[1] < 8) {
             if (The_grid[identifiedMatch[0]][identifiedMatch[1]] % 7 == The_grid[identifiedMatch[0]][lengthofmatch + identifiedMatch[1]] % 7) {
                 lengthofmatch += 1
-                console.log("+1")
             } else {
                 break;
             }
@@ -289,7 +287,6 @@ function clearGems (identifiedMatch: number[]) {
         while (lengthofmatch + identifiedMatch[0] < 8) {
             if (The_grid[identifiedMatch[0]][identifiedMatch[1]] % 7 == The_grid[lengthofmatch + identifiedMatch[0]][identifiedMatch[1]] % 7) {
                 lengthofmatch += 1
-                console.log("+1")
             } else {
                 break;
             }
@@ -314,7 +311,6 @@ function clearGems (identifiedMatch: number[]) {
         }
     } else {
         for (let index23 = 0; index23 <= lengthofmatch - 1; index23++) {
-            console.log(The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]])
             if (The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] > 7 && The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] <= 14) {
                 BOOM(index23 + identifiedMatch[0], identifiedMatch[1], protectloc[0], protectloc[1])
             }
@@ -326,8 +322,7 @@ function clearGems (identifiedMatch: number[]) {
             }
         }
     }
-    sco_re += 100
-    updateBoard()
+    score(50 * (2 ** (lengthofmatch - 3) + cascadeMult))
     if (queuedpause) {
         queuedpause = false
         pause(100)
@@ -403,11 +398,13 @@ let fated = false
 let gemlist: Image[] = []
 let tries = 0
 let latestmatchedcall = false
+let cascadeMult = 0
 let matchloc: number[] = []
 let sco_re = 0
 let queuedpause = false
 let deleteY = 0
 let deleteX = 0
+let bogusPoints = 0
 let mySprite: Sprite = null
 let The_grid: number[][] = []
 let fate: number[] = []
