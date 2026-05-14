@@ -12,6 +12,7 @@ function BOOM (boomx: number, boomy: number, protectedNewlyspawnedX: number, pro
                 if (deleteX != boomx || deleteY != boomy) {
                     if (The_grid[deleteX][deleteY] > 7) {
                         if (The_grid[deleteX][deleteY] < 15) {
+                            The_grid[boomx][boomy] = 0
                             BOOM(deleteX, deleteY, -1, -1)
                         }
                     }
@@ -299,9 +300,9 @@ function clearGems (identifiedMatch: number[]) {
     protectloc = [-1, -1]
     if (!(tchecked)) {
         tchecked = true
-        newFlameLoc = tCheck((identifiedMatch[2] + 1) % 2)
+        TFlame = tCheck((identifiedMatch[2] + 1) % 2)
     } else {
-        newFlameLoc = [-1, -1]
+        TFlame = false
     }
     if (identifiedMatch[2] == 0) {
         while (matchColor > 7) {
@@ -311,7 +312,7 @@ function clearGems (identifiedMatch: number[]) {
             if (The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] > 7 && The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] <= 14) {
                 BOOM(identifiedMatch[0], index2222 + identifiedMatch[1], protectloc[0], protectloc[1])
             }
-            if (index2222 == 2 && lengthofmatch == 4 || identifiedMatch[0] == newFlameLoc[0] && index2222 + identifiedMatch[1] == newFlameLoc[1]) {
+            if (index2222 == 2 && lengthofmatch == 4 || The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] == 0 && TFlame) {
                 The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] = matchColor + 7
                 protectloc = [identifiedMatch[0], index2222 + identifiedMatch[1]]
             } else {
@@ -323,7 +324,7 @@ function clearGems (identifiedMatch: number[]) {
             if (The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] > 7 && The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] <= 14) {
                 BOOM(index23 + identifiedMatch[0], identifiedMatch[1], protectloc[0], protectloc[1])
             }
-            if (index23 == 2 && lengthofmatch == 4 || index23 + identifiedMatch[0] == newFlameLoc[0] && identifiedMatch[1] == newFlameLoc[1]) {
+            if (index23 == 2 && lengthofmatch == 4 || The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] == 0 && TFlame) {
                 The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = matchColor + 7
                 protectloc = [index23 + identifiedMatch[0], identifiedMatch[1]]
             } else {
@@ -356,7 +357,7 @@ function tCheck (num: number) {
                         if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
                             if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
                                 clearGems([t, u, 0])
-                                return [t, u]
+                                return true
                             }
                         }
                     }
@@ -365,7 +366,7 @@ function tCheck (num: number) {
                         if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
                             if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
                                 clearGems([t, u, 1])
-                                return [t, u]
+                                return true
                             }
                         }
                     }
@@ -373,7 +374,7 @@ function tCheck (num: number) {
             }
         }
     }
-    return [-1, -1]
+    return false
 }
 function updateBoard () {
     for (let r = 0; r <= 7; r++) {
@@ -396,20 +397,20 @@ function Rotate (col: number, row: number) {
     return dupedgrid
 }
 function butLikeWhere () {
-    for (let t = 0; t <= 7; t++) {
-        for (let u = 0; u <= 7; u++) {
-            if (The_grid[t][u] != 0) {
-                if (u < 6) {
-                    if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
-                        if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
-                            return [t, u, 0]
+    for (let v = 0; v <= 7; v++) {
+        for (let w = 0; w <= 7; w++) {
+            if (The_grid[v][w] != 0) {
+                if (w < 6) {
+                    if (The_grid[v][w] % 7 == The_grid[v][w + 1] % 7) {
+                        if (The_grid[v][w] % 7 == The_grid[v][w + 2] % 7) {
+                            return [v, w, 0]
                         }
                     }
                 }
-                if (t < 6) {
-                    if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
-                        if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
-                            return [t, u, 1]
+                if (v < 6) {
+                    if (The_grid[v][w] % 7 == The_grid[v + 1][w] % 7) {
+                        if (The_grid[v][w] % 7 == The_grid[v + 2][w] % 7) {
+                            return [v, w, 1]
                         }
                     }
                 }
@@ -423,7 +424,7 @@ let yoffset = 0
 let xoffset = 0
 let list_score: number[] = []
 let cba: number[] = []
-let newFlameLoc: number[] = []
+let TFlame = false
 let tchecked = false
 let protectloc: number[] = []
 let matchColor = 0
