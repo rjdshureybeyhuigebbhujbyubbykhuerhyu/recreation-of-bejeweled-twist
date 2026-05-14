@@ -237,6 +237,7 @@ function theGravityOfTheSituation () {
         } else {
             cascadeMult += 1
             while (matchloc[0] != -1) {
+                console.log("gravitied")
                 clearGems(matchloc)
                 matchloc = butLikeWhere()
             }
@@ -244,8 +245,9 @@ function theGravityOfTheSituation () {
     }
 }
 function score (num: number) {
-    sco_re += 100
+    sco_re += num
     console.log("scored " + num)
+    console.logValue("score", sco_re)
 }
 function duplicate2DList (array: number[][]) {
     clone = [[0]]
@@ -272,6 +274,7 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     changecursorpos(0, 1)
 })
 function clearGems (identifiedMatch: number[]) {
+    console.log("clear ran")
     updateBoard()
     pause(20)
     lengthofmatch = 3
@@ -294,6 +297,12 @@ function clearGems (identifiedMatch: number[]) {
     }
     matchColor = The_grid[identifiedMatch[0]][0 + identifiedMatch[1]]
     protectloc = [-1, -1]
+    if (!(tchecked)) {
+        tchecked = true
+        newFlameLoc = tCheck((identifiedMatch[2] + 1) % 2)
+    } else {
+        newFlameLoc = [-1, -1]
+    }
     if (identifiedMatch[2] == 0) {
         while (matchColor > 7) {
             matchColor += -7
@@ -302,7 +311,7 @@ function clearGems (identifiedMatch: number[]) {
             if (The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] > 7 && The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] <= 14) {
                 BOOM(identifiedMatch[0], index2222 + identifiedMatch[1], protectloc[0], protectloc[1])
             }
-            if (index2222 == 2 && lengthofmatch == 4) {
+            if (index2222 == 2 && lengthofmatch == 4 || identifiedMatch[0] == newFlameLoc[0] && index2222 + identifiedMatch[1] == newFlameLoc[1]) {
                 The_grid[identifiedMatch[0]][index2222 + identifiedMatch[1]] = matchColor + 7
                 protectloc = [identifiedMatch[0], index2222 + identifiedMatch[1]]
             } else {
@@ -314,7 +323,7 @@ function clearGems (identifiedMatch: number[]) {
             if (The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] > 7 && The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] <= 14) {
                 BOOM(index23 + identifiedMatch[0], identifiedMatch[1], protectloc[0], protectloc[1])
             }
-            if (index23 == 2 && lengthofmatch == 4) {
+            if (index23 == 2 && lengthofmatch == 4 || index23 + identifiedMatch[0] == newFlameLoc[0] && identifiedMatch[1] == newFlameLoc[1]) {
                 The_grid[index23 + identifiedMatch[0]][identifiedMatch[1]] = matchColor + 7
                 protectloc = [index23 + identifiedMatch[0], identifiedMatch[1]]
             } else {
@@ -323,16 +332,48 @@ function clearGems (identifiedMatch: number[]) {
         }
     }
     score(50 * (2 ** (lengthofmatch - 3) + cascadeMult))
+    console.log("50×(2^(" + lengthofmatch + "-3)+" + cascadeMult + ")")
     if (queuedpause) {
         queuedpause = false
         pause(100)
     }
-    pause(20)
+    if (!(tchecked)) {
+        pause(20)
+    }
+    tchecked = false
 }
 function placeCursorOnGrid (col: number, row: number) {
     tiles.placeOnTile(mySprite, tiles.getTileLocation(col + 3, row))
     mySprite.x += 8
     mySprite.y += 8
+}
+function tCheck (num: number) {
+    for (let t = 0; t <= 7; t++) {
+        for (let u = 0; u <= 7; u++) {
+            if (The_grid[t][u] != 0) {
+                if (num == 0) {
+                    if (u < 6) {
+                        if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
+                            if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
+                                clearGems([t, u, 0])
+                                return [t, u]
+                            }
+                        }
+                    }
+                } else {
+                    if (t < 6) {
+                        if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
+                            if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
+                                clearGems([t, u, 1])
+                                return [t, u]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return [-1, -1]
 }
 function updateBoard () {
     for (let r = 0; r <= 7; r++) {
@@ -355,22 +396,20 @@ function Rotate (col: number, row: number) {
     return dupedgrid
 }
 function butLikeWhere () {
-    if (The_grid[0][0] != 99) {
-        for (let t = 0; t <= 7; t++) {
-            for (let u = 0; u <= 7; u++) {
-                if (The_grid[t][u] != 0) {
-                    if (u < 6) {
-                        if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
-                            if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
-                                return [t, u, 0]
-                            }
+    for (let t = 0; t <= 7; t++) {
+        for (let u = 0; u <= 7; u++) {
+            if (The_grid[t][u] != 0) {
+                if (u < 6) {
+                    if (The_grid[t][u] % 7 == The_grid[t][u + 1] % 7) {
+                        if (The_grid[t][u] % 7 == The_grid[t][u + 2] % 7) {
+                            return [t, u, 0]
                         }
                     }
-                    if (t < 6) {
-                        if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
-                            if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
-                                return [t, u, 1]
-                            }
+                }
+                if (t < 6) {
+                    if (The_grid[t][u] % 7 == The_grid[t + 1][u] % 7) {
+                        if (The_grid[t][u] % 7 == The_grid[t + 2][u] % 7) {
+                            return [t, u, 1]
                         }
                     }
                 }
@@ -384,6 +423,8 @@ let yoffset = 0
 let xoffset = 0
 let list_score: number[] = []
 let cba: number[] = []
+let newFlameLoc: number[] = []
+let tchecked = false
 let protectloc: number[] = []
 let matchColor = 0
 let lengthofmatch = 0
